@@ -1,6 +1,6 @@
 # deploy-sourcegraph-azure
 
-This Terraform plan creates a resource group and a container instance with the latest stable version of Sourcegraph in Azure subcription you specified.
+This Terraform plan creates a resource group and a container instance with the latest stable version of Sourcegraph in Azure.
 
 ## Prerequisities
 
@@ -10,19 +10,19 @@ This Terraform plan creates a resource group and a container instance with the l
 
 ## Commands
 
-1.
+1. Clone this repository and initialize Terraform:
 
 ```bash
 terraform init
 ```
 
-2.
+2. Review the Terraform execution plan:
 
 ```bash
 terraform plan
 ```
 
-example output:
+Example output:
 
 ```bash
 Terraform used the selected providers to generate thefollowing execution plan. Resource actions are indicated withthe following symbols:
@@ -77,18 +77,20 @@ Changes to Outputs:
   + server_ip = (known after apply)
 ```
 
-3.
+3. Deploy Sourcegraph using Terraform:
 
 ```bash
 terraform apply
 ```
 
-and answer 'yes' if asked _Do you want to perform these actions?_
+Answer 'yes' if asked _Do you want to perform these actions?_
 
-Once its deployed, you can copy the ouput `server_ip` to browser or `fqdn`:port and use Sourcegraph.
+Once it's deployed, you can copy the ouput `server_ip` and `fqdn`:port, paste these into your web browser, and start using Sourcegraph.
+
+![Sourcegraph screenshot](https://user-images.githubusercontent.com/989826/126650657-cef98203-1505-4848-aab6-57acda1ec35f.png)
 
 ## Todos:
 
-- deploy to Azure compute
+- Deploy to Azure compute
 - HTTPS
 - SSH
