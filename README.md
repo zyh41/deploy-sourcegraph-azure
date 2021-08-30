@@ -1,6 +1,6 @@
 # deploy-sourcegraph-azure
 
-This Terraform plan creates a resource group and a container instance with the latest stable version of Sourcegraph in Azure subcription you specified.
+This Terraform plan creates a resource group and a container instance with the latest stable version of Sourcegraph in Azure.
 
 ## Prerequisities
 
@@ -12,7 +12,7 @@ This Terraform plan creates a resource group and a container instance with the l
 
 ## Commands
 
-0. Generating a self signed cert using openssl
+0. Clone this repository and generate a self signed cert using openssl
 
 ```bash
 openssl req -new -newkey rsa:2048 -nodes -keyout sourcegraph.key -out sourcegraph.csr -config openssl.conf
@@ -25,19 +25,19 @@ This will created a private key and a certificate signing request using [openssl
 openssl x509 -req -days 365 -in sourcegraph.csr -signkey sourcegraph.key -out sourcegraph.crt -extfile openssl.conf -extensions req_ext
 ```
 
-1.
+1. Initialize Terraform:
 
 ```bash
 terraform init
 ```
 
-2.
+2. Review the Terraform execution plan:
 
 ```bash
 terraform plan
 ```
 
-example output:
+Example output:
 
 ```bash
 Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the
@@ -105,26 +105,26 @@ Changes to Outputs:
   + server_ip = (known after apply)
 ```
 
-3.
+3. Deploy Sourcegraph using Terraform:
 
 ```bash
 terraform apply
 ```
 
-and answer 'yes' if asked _Do you want to perform these actions?_
+Answer 'yes' if asked _Do you want to perform these actions?_
 
 Once its deployed, you can copy the output `server_ip` or `fqdn` to browser and use Sourcegraph.
 
-4.  Use
+![Sourcegraph screenshot](https://user-images.githubusercontent.com/989826/126650657-cef98203-1505-4848-aab6-57acda1ec35f.png)
+
+4.  To destroy the instance, run:
 
 ```bash
 terraform destroy
 ```
 
-To destroy the instance.
-
 ## Todos:
 
-- deploy to Azure compute
+- Deploy to Azure compute
 - ~~HTTPS~~
 - SSH
