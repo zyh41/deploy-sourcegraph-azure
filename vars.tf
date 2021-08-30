@@ -15,9 +15,11 @@ variable "aci" {
     "dns_name_label" : "sourcegraph-in-aci",
     "os_type" : "Linux"
     "container_name" : "sourcegraph"
-    "image" : "sourcegraph/server:3.30.4",
-    "cpu" : "0.5",
-    "memory" : "1.5"
-    "port" : "7080" # aci does not support port mapping https://docs.microsoft.com/en-us/azure/container-instances/container-instances-troubleshooting#container-group-ip-address-may-not-be-accessible-due-to-mismatched-ports
+    "image" : "sourcegraph/server:3.31.0",
+    "cpu" : "2",
+    "memory" : "4"
+    "https_port" : "443" # aci does not support port mapping https://docs.microsoft.com/en-us/azure/container-instances/container-instances-troubleshooting#container-group-ip-address-may-not-be-accessible-due-to-mismatched-ports
+    "http_port" : "80"
+    "protocol": "TCP"
   }
 }

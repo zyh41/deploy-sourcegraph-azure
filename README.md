@@ -8,7 +8,22 @@ This Terraform plan creates a resource group and a container instance with the l
 - [Terraform](https://www.terraform.io/downloads.html)
 - [Auth Terraform to Azure using Azure CLI or CloudShell in Azure](https://docs.microsoft.com/en-us/azure/developer/terraform/get-started-cloud-shell-bash?tabs=bash#5-authenticate-terraform-to-azure) and/or [here](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/azure_cli)
 
+- [openssl](https://www.openssl.org/) or [mkcert](https://github.com/FiloSottile/mkcert) to generate self signed certificates for HTTPS.
+
 ## Commands
+
+0. Generating a self signed cert using openssl
+
+```bash
+openssl req -new -newkey rsa:2048 -nodes -keyout sourcegraph.key -out sourcegraph.csr -config openssl.conf
+```
+
+This will created a private key and a certificate signing request using [openssl.conf](./openssl.conf).
+
+```bash
+# generate and sign cert using private key and config file from above
+openssl x509 -req -days 365 -in sourcegraph.csr -signkey sourcegraph.key -out sourcegraph.crt -extfile openssl.conf -extensions req_ext
+```
 
 1.
 
@@ -25,7 +40,8 @@ terraform plan
 example output:
 
 ```bash
-Terraform used the selected providers to generate thefollowing execution plan. Resource actions are indicated withthe following symbols:
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the
+following symbols:
   + create
 
 Terraform will perform the following actions:
@@ -45,14 +61,26 @@ Terraform will perform the following actions:
 
       + container {
           + commands = (known after apply)
-          + cpu      = 0.5
-          + image    = "sourcegraph/server:3.30.4"
-          + memory   = 1.5
+          + cpu      = 2
+          + image    = "sourcegraph/server:3.31.0"
+          + memory   = 4
           + name     = "sourcegraph"
 
           + ports {
-              + port     = 7080
+              + port     = 443
               + protocol = "TCP"
+            }
+          + ports {
+              + port     = 80
+              + protocol = "TCP"
+            }
+
+          + volume {
+              + empty_dir  = false
+              + mount_path = "/etc/sourcegraph"
+              + name       = "nginx-config"
+              + read_only  = false
+              + secret     = (sensitive value)
             }
         }
 
@@ -85,10 +113,18 @@ terraform apply
 
 and answer 'yes' if asked _Do you want to perform these actions?_
 
-Once its deployed, you can copy the ouput `server_ip` to browser or `fqdn`:port and use Sourcegraph.
+Once its deployed, you can copy the output `server_ip` or `fqdn` to browser and use Sourcegraph.
+
+4.  Use
+
+```bash
+terraform destroy
+```
+
+To destroy the instance.
 
 ## Todos:
 
 - deploy to Azure compute
-- HTTPS
+- ~~HTTPS~~
 - SSH

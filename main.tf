@@ -42,8 +42,23 @@ resource "azurerm_container_group" "this" {
     memory = var.aci["memory"]
 
     ports {
-      port     = var.aci["port"]
-      protocol = "TCP"
+      port     = var.aci["https_port"]
+      protocol = var.aci["protocol"]
+    }
+
+    ports {
+      port     = var.aci["http_port"]
+      protocol = var.aci["protocol"]
+    }
+
+    volume {
+      name = "nginx-config"
+      mount_path = "/etc/sourcegraph"
+      secret = {
+        "sourcegraph.crt" = filebase64("${path.module}/sourcegraph.crt")
+        "sourcegraph.key" = filebase64("${path.module}/sourcegraph.key")
+        "nginx.conf" = filebase64("${path.module}/nginx.conf")
+      }
     }
   }
 }
